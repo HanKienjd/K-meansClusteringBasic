@@ -17,7 +17,7 @@ X0= np.random.multivariate_normal(means[0], cov, N)
 X1= np.random.multivariate_normal(means[1], cov, N)
 X2= np.random.multivariate_normal(means[2], cov, N)
 
-# Gộp các clustering lại thành một vector cột duy nhất
+# Gộp các điểm lại thành một vector cột duy nhất
 X=np.concatenate((X0,X1,X2), axis=0)
 K=3 #3 cụm(Clusters)
 
