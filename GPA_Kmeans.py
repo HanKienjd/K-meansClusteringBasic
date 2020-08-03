@@ -1,9 +1,11 @@
 import csv
 import numpy as np
 import random
-import matplotlib.pyplot as plt
-
 from scipy.spatial.distance import cdist
+import matplotlib.pyplot as plt
+import random
+
+np.random.seed(18)
 
 with open('diem.csv') as csv_file:
     csv_reader= csv.reader(csv_file, delimiter=',')
@@ -19,7 +21,7 @@ a=np.array(myList)
 a=a.reshape(-1,1)
 a=a.astype(np.float)
 
-k=3 #3 cụm(Clusters)
+k=4 # cụm(Clusters)
 
 # Hàm khởi tạo ngẫu nhiên các centroids ban đầu
 def kmeans_init_centroids(X, k):
@@ -76,5 +78,48 @@ def kmeans(X, K):
 
 # Thực hiện chương trình(centroids, labels, it) = kmeans(X, K)
 (centroids, labels, it) = kmeans(a, k)
-print(centroids)
-print(labels)
+
+#Đếm số lượng phần tử thuộc mỗi centroid
+arr= np.squeeze(np.asarray(labels[-1]))
+arrLabelNumber=[]
+number=0
+for i in range(k):
+    for label in arr:
+        if label==i:
+            number+=1
+    arrLabelNumber.append(number)
+    number=0
+
+#Lấy giá trị của các centroid
+centroids_value= np.squeeze(np.asarray(centroids[-1]))
+
+for i in range(k-1):
+    for j in range(0, k-i-1):
+        if arrLabelNumber[j] > arrLabelNumber[j+1] : 
+                arrLabelNumber[j], arrLabelNumber[j+1] = arrLabelNumber[j+1], arrLabelNumber[j]
+                centroids_value[j], centroids_value[j+1] = centroids_value[j+1], centroids_value[j] 
+
+
+print(centroids_value)
+print(arrLabelNumber)
+plt.plot(arrLabelNumber,centroids_value,color='green', linestyle='dashed', linewidth = 3, 
+         marker='o', markerfacecolor='blue', markersize=12)
+plt.xlabel("Số lượng sinh viên")
+plt.ylabel("Điểm trung bình")
+plt.title("Thống kê điểm trung bình năm nhất")
+
+#Tọa độ trục
+plt.grid(True)
+plt.ylim(1,4)
+xstick=[]
+ystick=[]
+i=0
+while(i<4):
+    ystick.append(i)
+    i+=0.25
+i=0
+while(i<100):
+    xstick.append(i)
+    i+=1
+plt.yticks(ystick)
+plt.show()
